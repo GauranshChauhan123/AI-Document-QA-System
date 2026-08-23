@@ -59,10 +59,10 @@ jobs:
         include:
           - service: backend
             dockerfile: backend/Dockerfile
-            image_name: gauranshchauhan123/pdf-qa-backend
+            image_name: pdf-qa-backend
           - service: frontend
             dockerfile: frontend/Dockerfile
-            image_name: gauranshchauhan123/pdf-qa-frontend
+            image_name: pdf-qa-frontend
     steps:
       - uses: actions/checkout@v4
 
@@ -113,14 +113,13 @@ jobs:
           docker load --input /tmp/backend-image.tar
           docker load --input /tmp/frontend-image.tar
 
-      # Tag loaded images to match what docker-compose.yml expects
       - name: Tag images for docker compose
         run: |
-          docker tag gauranshchauhan123/pdf-qa-backend:latest pdf-qa-backend:latest
-          docker tag gauranshchauhan123/pdf-qa-frontend:latest pdf-qa-frontend:latest
+          docker tag pdf-qa-backend:latest pdf-qa-backend:latest
+          docker tag pdf-qa-frontend:latest pdf-qa-frontend:latest
 
-      - name: Create .env for compose (dummy key so backend starts)
-        run: echo "GEMINI_API_KEY=dummy-key-for-ci" > .env
+      - name: Create .env for compose (with secrets from GitHub)
+        run: echo "GEMINI_API_KEY=${{ secrets.GOOGLE_API_KEY }}" > .env
 
       - name: Start services with docker compose
         run: docker compose up -d --no-build
@@ -145,9 +144,15 @@ jobs:
         run: |
           curl -f http://localhost:8000/health
 
-      - name: Check frontend is responding
+      - name: Check frontend is running
         run: |
-          curl -f http://localhost:8501/_stcore/health
+          FRONTEND_STATUS=$(docker inspect --format='{{.State.Status}}' pdf_qa_frontend)
+          echo "Frontend container status: $FRONTEND_STATUS"
+          if [ "$FRONTEND_STATUS" != "running" ]; then
+            echo "Frontend container is not running"
+            docker compose logs frontend
+            exit 1
+          fi
 
       - name: Collect logs on failure
         if: failure()
@@ -182,8 +187,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          # No 'registry:' field → defaults to Docker Hub
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push ${{ matrix.service }} image
