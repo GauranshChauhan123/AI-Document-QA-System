@@ -112,11 +112,9 @@ jobs:
         run: |
           docker load --input /tmp/backend-image.tar
           docker load --input /tmp/frontend-image.tar
-
-      - name: Tag images for docker compose
-        run: |
-          docker tag pdf-qa-backend:latest pdf-qa-backend:latest
-          docker tag pdf-qa-frontend:latest pdf-qa-frontend:latest
+          # Show what tags were actually loaded (helps debug tag mismatches)
+          echo "=== Loaded images ==="
+          docker images
 
       - name: Create .env for compose (with secrets from GitHub)
         run: echo "GEMINI_API_KEY=${{ secrets.GOOGLE_API_KEY }}" > .env
@@ -144,15 +142,30 @@ jobs:
         run: |
           curl -f http://localhost:8000/health
 
-      - name: Check frontend is running
+      # Streamlit needs extra time to load models and bind the port even
+      # after the container is 'running'. We poll up to 200s (40 × 5s).
+      - name: Wait for frontend to become ready
         run: |
-          FRONTEND_STATUS=$(docker inspect --format='{{.State.Status}}' pdf_qa_frontend)
-          echo "Frontend container status: $FRONTEND_STATUS"
-          if [ "$FRONTEND_STATUS" != "running" ]; then
-            echo "Frontend container is not running"
-            docker compose logs frontend
-            exit 1
-          fi
+          echo "Waiting for Streamlit health endpoint..."
+          for i in $(seq 1 40); do
+            STATUS=$(docker inspect --format='{{.State.Status}}' pdf_qa_frontend 2>/dev/null || echo "not_found")
+            echo "Attempt $i/40 — container status: $STATUS"
+            if [ "$STATUS" != "running" ] && [ "$STATUS" != "not_found" ]; then
+              echo "Frontend container stopped unexpectedly"
+              docker compose logs frontend
+              exit 1
+            fi
+            HTTP=$(curl -s -o /dev/null -w "%{http_code}" --max-time 3 http://localhost:8501/_stcore/health 2>/dev/null || echo "000")
+            echo "  HTTP status: $HTTP"
+            if [ "$HTTP" = "200" ]; then
+              echo "Frontend is healthy!"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Frontend did not become healthy in time"
+          docker compose logs frontend
+          exit 1
 
       - name: Collect logs on failure
         if: failure()
