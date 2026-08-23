@@ -1,3 +1,10 @@
+import sys
+from pathlib import Path
+
+FRONTEND_DIR = Path(__file__).resolve().parent
+if str(FRONTEND_DIR) not in sys.path:
+    sys.path.insert(0, str(FRONTEND_DIR))
+
 import streamlit as st
 
 from styles import load_css

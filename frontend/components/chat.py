@@ -52,17 +52,12 @@ def handle_chat():
             answer = result["answer"]
             sources = result["sources"]
 
-            placeholder = st.empty()
+            def stream_generator():
+                for word in answer.split(" "):
+                    yield word + " "
+                    time.sleep(0.01)
 
-            text = ""
-
-            for word in answer.split():
-
-                text += word + " "
-
-                placeholder.markdown(text)
-
-                time.sleep(0.02)
+            st.write_stream(stream_generator)
 
             show_sources(sources)
 
@@ -75,5 +70,12 @@ def handle_chat():
             )
 
         else:
-
-            st.error("Unable to get an answer from the backend.")
+            error_detail = "Unable to get an answer from the backend."
+            try:
+                err_json = response.json()
+                if "detail" in err_json:
+                    error_detail = f"Backend Error: {err_json['detail']}"
+            except Exception:
+                if response.text:
+                    error_detail = f"Backend Error: {response.text}"
+            st.error(error_detail)

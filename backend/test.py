@@ -1,8 +1,11 @@
+import sys
 from pathlib import Path
 
-from backend.ingest import IngestionPipeline
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+from backend.ingest import IngestionPipeline
 
 pdf_folder = BASE_DIR / "data" / "pdfs"
 
@@ -10,7 +13,7 @@ pdfs = list(pdf_folder.glob("*.pdf"))
 
 pipeline = IngestionPipeline()
 
-docs, chunks = pipeline.ingest(pdfs)
+result = pipeline.ingest(pdfs)
 
-print(f"Loaded {docs} pages")
-print(f"Created {chunks} chunks")
+print(f"Loaded {result['documents']} pages")
+print(f"Created {result['chunks']} chunks")

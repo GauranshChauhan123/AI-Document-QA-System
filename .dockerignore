@@ -1,0 +1,39 @@
+# Version control
+.git
+.gitignore
+
+# Python cache
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Runtime data (mounted as Docker volumes instead)
+data/
+faiss_db/
+
+
+# Test files
+**/test*.py
+**/tests/
+
+# Misc
+*.log
+*.tmp
+*.DS_Store
+Thumbs.db
+
+# Docker files themselves (no recursion needed)
+docker-compose.yml

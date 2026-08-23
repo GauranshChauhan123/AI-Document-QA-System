@@ -30,7 +30,7 @@ def render_sidebar():
 
                 files = [
                     (
-                        "file",
+                        "files",
                         (
                             file.name,
                             file.getvalue(),
@@ -41,34 +41,33 @@ def render_sidebar():
                 ]
 
                 with st.spinner("Building knowledge base..."):
-
                     response = upload_documents(files)
 
                 if response.status_code in [200, 201]:
-
                     data = response.json()
-
-                    st.success(data["message"])
+                    st.success(data.get("message", "Uploaded successfully!"))
 
                     st.subheader("📊 Statistics")
-
                     col1, col2 = st.columns(2)
-
                     with col1:
-                        st.metric("Docs", data["documents"])
-
+                        st.metric("Docs", data.get("documents", 0))
                     with col2:
-                        st.metric("Chunks", data["chunks"])
+                        st.metric("Chunks", data.get("chunks", 0))
 
                     st.divider()
-
                     st.subheader("📄 Uploaded PDFs")
-
                     for file in uploaded_files:
-                       st.write(f"📄 {file.name}")
+                        st.write(f"📄 {file.name}")
                 else:
-
-                    st.error(response.text)
+                    err_msg = "Upload failed."
+                    try:
+                        err_json = response.json()
+                        if "detail" in err_json:
+                            err_msg = f"Error: {err_json['detail']}"
+                    except Exception:
+                        if response.text:
+                            err_msg = f"Error: {response.text}"
+                    st.error(err_msg)
 
         st.divider()
 

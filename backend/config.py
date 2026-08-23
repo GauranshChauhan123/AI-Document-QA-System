@@ -4,10 +4,12 @@ from dotenv import load_dotenv
 
 # ---------------- Paths ---------------- #
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# __file__ is  /app/backend/config.py  inside Docker → parent.parent = /app
+# For local dev it resolves to the repo root — same behaviour.
+BASE_DIR = Path(os.environ.get("APP_BASE_DIR", str(Path(__file__).resolve().parent.parent)))
 
-# Load the project-local configuration regardless of the working directory used
-# to start Uvicorn.
+# Load .env files (no-op if the files are absent; env vars already injected by Docker)
+load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR / "backend" / ".env")
 
 DATA_DIR = BASE_DIR / "data"
@@ -18,7 +20,7 @@ VECTOR_DB_DIR = BASE_DIR / "faiss_db"
 
 # ---------------- Gemini ---------------- #
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 MODEL_NAME = "gemini-2.5-flash"
 

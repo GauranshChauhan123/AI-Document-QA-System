@@ -17,6 +17,11 @@ def ask_question(request: AskRequest):
         from backend.rag import RAGPipeline
 
         result = RAGPipeline().ask(request.question)
+    except FileNotFoundError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail="No documents have been indexed yet. Please upload a PDF first.",
+        ) from exc
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception as exc:

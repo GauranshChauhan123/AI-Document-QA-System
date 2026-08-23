@@ -1,0 +1,52 @@
+services:
+
+  # ─────────────────────────────────────────────
+  #  Backend  –  FastAPI / uvicorn
+  # ─────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: pdf_qa_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist uploaded PDFs and FAISS index across restarts
+      - pdf_data:/app/data/pdfs
+      - faiss_data:/app/faiss_db
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ─────────────────────────────────────────────
+  #  Frontend  –  Streamlit
+  # ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: pdf_qa_frontend
+    restart: unless-stopped
+    environment:
+      - BACKEND_URL=http://backend:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+# ─────────────────────────────────────────────
+#  Named volumes
+# ─────────────────────────────────────────────
+volumes:
+  pdf_data:
+  faiss_data:
