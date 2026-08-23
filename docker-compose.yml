@@ -4,6 +4,7 @@ services:
   #  Backend  –  FastAPI / uvicorn
   # ─────────────────────────────────────────────
   backend:
+    image: pdf-qa-backend:latest
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -31,6 +32,7 @@ services:
   #  Frontend  –  Streamlit
   # ─────────────────────────────────────────────
   frontend:
+    image: pdf-qa-frontend:latest
     build:
       context: .
       dockerfile: frontend/Dockerfile
