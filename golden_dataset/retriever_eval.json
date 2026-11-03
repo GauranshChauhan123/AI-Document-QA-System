@@ -1,0 +1,64 @@
+[
+  {
+    "input": "What is machine learning, and what are the two main steps involved in solving a practical problem using machine learning?",
+    "expected_output": "Machine learning is a subfield of computer science concerned with building algorithms that rely on a collection of examples to solve problems. The two main steps are gathering a dataset and algorithmically building a statistical model based on that dataset."
+  },
+  {
+    "input": "What factors should be considered when selecting a machine learning algorithm?",
+    "expected_output": "Important factors include the number of training examples and features, whether the features are categorical or numerical, the nonlinearity of the data, training speed, and prediction speed."
+  },
+  {
+    "input": "What are the three types of datasets used in practical machine learning, and what is the purpose of each?",
+    "expected_output": "The three datasets are the training set, validation set, and test set. The training set is used to build the model. The validation set is used to select the learning algorithm and find the best hyperparameter values. The test set is used to assess the model before delivering it to a client or putting it into production."
+  },
+  {
+    "input": "What is the traditional rule of thumb for splitting a dataset into training, validation, and test sets?",
+    "expected_output": "The traditional rule of thumb is to use 70% of the dataset for training, 15% for validation, and 15% for testing. For very large datasets, a split such as 95% training, 2.5% validation, and 2.5% testing may also be reasonable."
+  },
+  {
+    "input": "What is the difference between classification and regression in machine learning?",
+    "expected_output": "Classification is the problem of automatically assigning a label to an unlabeled example, where the label belongs to a finite set of classes. Regression is the problem of predicting a real-valued label or target for an unlabeled example. Spam detection is an example of classification, while house price prediction is an example of regression."
+  },  
+  {
+    "input": "What is the difference between binary classification and multiclass classification?",
+    "expected_output": "Binary classification involves predicting one of two possible classes, such as spam or not spam, or sick or healthy. Multiclass classification involves predicting one of three or more possible classes."
+  },
+  {
+    "input": "What are model-based and instance-based learning algorithms?",
+    "expected_output": "Model-based learning algorithms use training data to create a model with parameters learned from the data. Once the model is built, the training data can be discarded. Instance-based learning algorithms use the whole dataset as the model. An example is k-Nearest Neighbors (kNN), which predicts a label based on the most frequently occurring label among nearby examples."
+  },
+  {
+    "input": "What is the difference between shallow learning and deep learning?",
+    "expected_output": "Shallow learning algorithms learn model parameters directly from the features of training examples. Deep learning uses neural networks with more than one layer between the input and output. In deep neural networks, most model parameters are learned from the outputs of preceding layers rather than directly from the original training features."
+  },
+  {
+    "input": "What is underfitting in machine learning, and what are its main causes?",
+    "expected_output": "Underfitting is the inability of a model to predict the labels of the data on which it was trained accurately. Its main causes include using a model that is too simple for the data and using features that are not sufficiently informative. It can be addressed by trying a more complex model or engineering more predictive features."
+  },
+  {
+    "input": "What is overfitting in machine learning, and how can it be prevented?",
+    "expected_output": "Overfitting occurs when a model predicts the training data very well but performs poorly on at least one holdout set. It can be reduced by using a simpler model, reducing the dimensionality of the dataset, adding more training data, or applying regularization."
+  },
+  {
+    "input": "What is regularization, and how does it help prevent overfitting?",
+    "expected_output": "Regularization is a group of methods that force a learning algorithm to build a less complex model. It helps prevent overfitting by reducing model variance, often at the cost of slightly increasing bias. It does this by adding a penalty term to the objective function that becomes larger when the model is more complex."
+  },
+  {
+    "input": "What are L1 and L2 regularization?",
+    "expected_output": "L1 and L2 are two widely used types of regularization. Both modify the model's objective function by adding a penalty related to the model parameters. L1 regularization penalizes the sum of the absolute values of the weights, while L2 regularization penalizes the sum of their squared values. These penalties encourage less complex models and help reduce overfitting."
+  },
+  {
+    "input": "What are model parameters in machine learning?",
+    "expected_output": "Parameters are variables that define a model and are directly modified by the learning algorithm based on the training data. The goal of learning is to find parameter values that make the model optimal according to a particular objective."
+  },
+  {
+    "input": "What is gradient descent, and what are some of its limitations and improvements?",
+    "expected_output": "Gradient descent is an optimization method used to find parameter values that minimize a model's loss function. It is sensitive to the choice of learning rate and can be slow on large datasets. Improvements include minibatch stochastic gradient descent, Adagrad, and Momentum. RMSprop and Adam are also frequently used variants in neural network training."
+  },
+  {
+    "input": "What is the difference between boosting and bagging in ensemble learning?",
+    "expected_output": "Boosting builds multiple models iteratively, where each new model attempts to correct errors made by previous models. Bagging creates multiple slightly different samples of the training data, trains a separate weak model on each sample, and combines their predictions. Random forest is a widely used machine learning algorithm based on bagging."
+  }
+]
+
+
