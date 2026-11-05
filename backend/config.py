@@ -16,7 +16,7 @@ DATA_DIR = BASE_DIR / "data"
 
 PDF_DIR = DATA_DIR / "pdfs"
 
-VECTOR_DB_DIR = BASE_DIR / "faiss_db"
+VECTOR_DB_DIR = BASE_DIR / "chroma_db"
 
 # ---------------- Gemini ---------------- #
 
@@ -32,7 +32,7 @@ CHUNK_OVERLAP = 200
 
 # ---------------- Retrieval ---------------- #
 
-TOP_K = 5   
+TOP_K = 6   
 
 FETCH_K = 10
 

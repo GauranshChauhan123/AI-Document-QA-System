@@ -28,13 +28,7 @@ from backend.retriever import Retriever
 load_dotenv()
 
 
-# =====================================================================
-# Evaluation Judge Model
-# NOTE: This model is used EXCLUSIVELY as an LLM judge for evaluation.
-# The method name `generate()` is required by DeepEval's base class
-# (DeepEvalBaseLLM) so DeepEval can prompt the model for evaluation
-# verdicts, precision/recall scores, and reasoning.
-# =====================================================================
+
 class AgentRouterJudge(DeepEvalBaseLLM):
     def __init__(self, model_name="gpt-5.6-sol", *args, **kwargs):
         self.model_name = model_name
@@ -47,12 +41,12 @@ class AgentRouterJudge(DeepEvalBaseLLM):
             default_headers={"User-Agent": "opencode/1.17.12"}
         )
 
-    # DeepEval calls this method to get the evaluation verdicts/reasoning
     def generate(self, prompt: str, schema=None, *args, **kwargs) -> str:
         client = self.model
         response = client.responses.create(
             model=self.model_name,
-            input=prompt
+            input=prompt,
+            timeout=120
         )
         return response.output_text
 
@@ -77,7 +71,7 @@ contextual_recall = ContextualRecallMetric(
     model=eval_judge,
 )
 
-data_path = os.path.join(os.path.dirname(__file__), "..", "golden_dataset", "retriever_eval.json")
+data_path = os.path.join(os.path.dirname(__file__), "..", "golden_dataset", "eval.json")
 
 with open(data_path, "r", encoding="utf-8") as f:
     dataset = json.load(f)
@@ -104,7 +98,7 @@ for item in dataset:
 
     test_cases.append(test_case)
 
-# 3. Evaluate retriever quality using AgentRouter as the judge
+
 evaluate(
     test_cases=test_cases,
     metrics=[
@@ -115,8 +109,8 @@ evaluate(
         "embedding_model": "all-MiniLM-L6-v2",
         "chunk_size": 1000,
         "chunk_overlap": 200,
-        "top_k": 5,
-        "retrieval_method": "MMR",
+        "top_k": 6,
+        "hybrid_search":"mmr and bm25",
         "fetch_k": 10,
         "evaluation_model": "gpt-5.6-sol"
     },

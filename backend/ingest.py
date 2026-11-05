@@ -1,10 +1,9 @@
 from pathlib import Path
-
+from backend.bm25_store import build_bm25_index
 from backend.config import PDF_DIR
 from backend.pdf_loader import load_pdf
 from backend.text_splitter import split_documents
-from backend.vector_store import create_vector_store, save_vector_store
-
+from backend.vector_store import create_vector_store
 
 class IngestionPipeline:
 
@@ -33,9 +32,14 @@ class IngestionPipeline:
 
         vector_db = create_vector_store(chunks)
 
-        save_vector_store(vector_db)
+        build_bm25_index(chunks)
+
+        # save_vector_store(vector_db)
 
         return {
             "documents": len(documents),
             "chunks": len(chunks)
         }
+
+if __name__== "__main__":
+    print(IngestionPipeline().ingest())

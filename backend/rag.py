@@ -68,5 +68,29 @@ class RAGPipeline:
 
         return {
             "answer":answer,
-            "sources":sources
+            "sources":sources,
+            "retrieval_context": [doc.page_content for doc in docs]
         }
+
+
+if __name__=="__main__":
+    pipeline = RAGPipeline()
+
+    while True:
+        question = input("\nAsk Question (type 'exit' to quit): ")
+
+        if question.lower() == "exit":
+            break
+
+        result = pipeline.ask(question)
+
+        print("\nAnswer:\n")
+        print(result["answer"])
+
+        print("\nSources:\n")
+
+        for doc in result["sources"]:
+            print(
+             f"{Path(doc['file']).name} "
+             f"(Page {doc['page']})"
+             )

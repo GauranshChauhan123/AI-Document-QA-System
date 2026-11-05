@@ -21,4 +21,36 @@ Contextual Recall                     │ 0.81                     │ 73.33% | 
         "evaluation_model": "gpt-5.6-sol"
 
 Contextual Precision                  │ 0.87                     │ 93.33% | passed=14 | failed=1                        │ 15 
-Contextual Recall                     │ 0.69                     │ 53.33% | passed=8  | failed=7                        │ 15                 
+Contextual Recall                     │ 0.69                     │ 53.33% | passed=8  | failed=7                        │ 15   
+              
+
+=============================================================================================================================
+
+"embedding_model": "all-MiniLM-L6-v2",
+        "chunk_size": 1000,
+        "chunk_overlap": 200,
+        "top_k": 5,
+        "hybrid_search":"mmr and bm25",
+        "fetch_k": 10,
+        "evaluation_model": "gpt-5.6-sol"
+
+ Metric                                            ┃ Average Score                   ┃ Pass Rate                                                          ┃ Total          │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━ │
+   Contextual Precision                            │ 0.86                            │ 86.67% | passed=13 | failed=2                                      │ 15             │
+   Contextual Recall                               │ 0.77                            │ 66.67% | passed=10 | failed=5                                      │ 15             │
+
+
+===============================================================================================================================================================================
+
+"embedding_model": "all-MiniLM-L6-v2",
+        "chunk_size": 1000,
+        "chunk_overlap": 200,
+        "top_k": 6,
+        "hybrid_search":"mmr and bm25",
+        "fetch_k": 10,
+        "evaluation_model": "gpt-5.6-sol"
+
+   Metric                                          ┃ Average Score                   ┃ Pass Rate                                                          ┃ Total          │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━ │
+│  Contextual Precision                            │ 0.87                            │ 80.00% | passed=12 | failed=3                                      │ 15             │
+│  Contextual Recall                               │ 0.84                            │ 80.00% | passed=12 | failed=3                                      │ 15             │
